@@ -1,6 +1,6 @@
 [submodule "gl3w"]
 	path = gl3w
 	url = https://github.com/skaslev/gl3w
-[submodule "glfw"]
-	path = glfw
-	url = https://github.com/glfw/glfw
+[submodule "vcpkg"]
+	path = vcpkg
+	url = https://github.com/Microsoft/vcpkg
