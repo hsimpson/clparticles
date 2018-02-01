@@ -6,6 +6,9 @@ Calculating particles with OpenCL and rendering with OpenGL
 
 - gl3w
 - glfw
+- glbinding
+- glm
+- globjects
 
 ## Building
 
@@ -14,6 +17,7 @@ Calculating particles with OpenCL and rendering with OpenGL
 - Visual Studio 2017
 - Python
 - CMake
+- Vcpkg
 
 ### Build gl3w
 
@@ -22,13 +26,14 @@ cd gl3w
 python gl3w_gen.py
 ```
 
-### Build glfw
-
+### Build Vcpkg
 ```sh
-cd glfw
-mkdir glfw-build
-cd glfw-build
-cmake .. -DBUILD_SHARED_LIBS=ON -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -G "Visual Studio 15 2017 Win64"
+cd vcpkg
+.\bootstrap-vcpkg.bat
 ```
 
-Open ```glfw-build\GLFW.sln``` in Visual Studio 2017 and build both Debug and Release
+### Install deps via Vcpkg
+```sh
+vcpkg.exe install glfw3:x64-windows
+vcpkg.exe install globjects:x64-windows
+``` 
