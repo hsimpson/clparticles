@@ -20,12 +20,39 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gl3w\src\gl3w.c" />
+    <ClCompile Include="imgui\examples\opengl3_example\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\boundingbox.cpp" />
     <ClCompile Include="src\clparticles.cpp" />
+    <ClCompile Include="src\settingsgui.cpp" />
+    <ClCompile Include="src\objectbase.cpp" />
+    <ClCompile Include="src\program.cpp" />
+    <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="imgui\examples\opengl3_example\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\stb_rect_pack.h" />
+    <ClInclude Include="imgui\stb_textedit.h" />
+    <ClInclude Include="imgui\stb_truetype.h" />
+    <ClInclude Include="src\boundingbox.h" />
+    <ClInclude Include="src\settingsgui.h" />
+    <ClInclude Include="src\objectbase.h" />
+    <ClInclude Include="src\program.h" />
+    <ClInclude Include="src\shader.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\targetver.h" />
+    <ClInclude Include="src\triangle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\default.frag" />
+    <None Include="shaders\default.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -84,7 +111,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>gl3w\include;vcpkg\installed\x64-windows\include;$(IncludePath)</IncludePath>
+    <IncludePath>gl3w\include;vcpkg\installed\x64-windows\include;imgui;imgui\examples\opengl3_example;$(IncludePath)</IncludePath>
     <LibraryPath>vcpkg\installed\x64-windows\debug\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -92,7 +119,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>gl3w\include;vcpkg\installed\x64-windows\include;$(IncludePath)</IncludePath>
+    <IncludePath>gl3w\include;vcpkg\installed\x64-windows\include;imgui;imgui\examples\opengl3_example;$(IncludePath)</IncludePath>
     <LibraryPath>vcpkg\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

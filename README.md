@@ -6,9 +6,7 @@ Calculating particles with OpenCL and rendering with OpenGL
 
 - gl3w
 - glfw
-- glbinding
 - glm
-- globjects
 
 ## Building
 
@@ -35,5 +33,5 @@ cd vcpkg
 ### Install deps via Vcpkg
 ```sh
 vcpkg.exe install glfw3:x64-windows
-vcpkg.exe install globjects:x64-windows
+vcpkg.exe install glm:x64-windows
 ``` 
