@@ -3,27 +3,28 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-ObjectBase::ObjectBase(GLenum drawMode) : _drawMode(drawMode) {
+ObjectBase::ObjectBase(GLenum drawMode)
+    : _drawMode(drawMode) {
 }
 
 ObjectBase::~ObjectBase() {
-  glDeleteVertexArrays(1, &_VAO);
-  glDeleteBuffers(1, &_VBO);
-  glDeleteBuffers(1, &_EBO);
+  glDeleteVertexArrays(1, &_vao);
+  glDeleteBuffers(1, &_vbo);
+  glDeleteBuffers(1, &_ebo);
 }
 
 void ObjectBase::init(Program* program) {
-  glGenVertexArrays(1, &_VAO);
-  glGenBuffers(1, &_VBO);
-  glGenBuffers(1, &_EBO);
+  glGenVertexArrays(1, &_vao);
+  glBindVertexArray(_vao);
+  glGenBuffers(1, &_vbo);
+  glGenBuffers(1, &_ebo);
 
   _program = program;
-  glBindVertexArray(_VAO);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, _vbo);
   glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(GLushort), &_indices[0], GL_STATIC_DRAW);
 
   // set the vertex attribute pointers
@@ -44,9 +45,10 @@ void ObjectBase::updated_model_matrix() {
   _modelMatrix                = translationMatrix * rotationMatrix * scaleMatrix;
 }
 
-void ObjectBase::translate(const glm::vec3& translate) {
+const glm::vec3& ObjectBase::translate(const glm::vec3& translate) {
   _position += translate;
   updated_model_matrix();
+  return _position;
 }
 
 void ObjectBase::rotate(const glm::quat& rotate) {
@@ -56,7 +58,7 @@ void ObjectBase::rotate(const glm::quat& rotate) {
 
 void ObjectBase::render() {
   _program->setUniformValue("modelMatrix", _modelMatrix);
-  glBindVertexArray(_VAO);
+  glBindVertexArray(_vao);
   glDrawElements(_drawMode, (GLsizei)_indices.size(), GL_UNSIGNED_SHORT, 0);
   glBindVertexArray(0);
 }

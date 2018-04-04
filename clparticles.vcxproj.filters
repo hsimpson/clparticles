@@ -19,6 +19,9 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{cb7e960b-4b15-4c66-bafc-ff234688549d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cl_kernels">
+      <UniqueIdentifier>{1f4c549d-1ba4-44d0-ac56-aa8a9410900f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\clparticles.cpp">
@@ -58,6 +61,12 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="src\settingsgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crosshair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\openclbackend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,6 +116,12 @@
     <ClInclude Include="src\settingsgui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\crosshair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\openclbackend.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default.vert">
@@ -114,6 +129,18 @@
     </None>
     <None Include="shaders\default.frag">
       <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\particle.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\particle.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="cl_kernels\particle_kernel.cl">
+      <Filter>cl_kernels</Filter>
+    </None>
+    <None Include="cl_kernels\test_kernel.cl">
+      <Filter>cl_kernels</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -24,5 +24,7 @@ class Program {
   void use();
 
   GLint getLocation(const std::string& name);
-  void  setUniformValue(const std::string& name, const glm::mat4& value);
+
+  void setUniformValue(const std::string& name, const glm::mat4& value);
+  void setUniformValue(const std::string& name, const glm::vec4& value);
 };

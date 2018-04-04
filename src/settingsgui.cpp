@@ -1,7 +1,8 @@
 #include "settingsgui.h"
 #include "imgui_impl_glfw_gl3.h"
 
-SettingsGui::SettingsGui(GLFWwindow* window) : _window(window) {
+SettingsGui::SettingsGui(GLFWwindow* window)
+    : _window(window) {
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
   (void)io;
@@ -22,7 +23,7 @@ SettingsGui::~SettingsGui() {
 }
 
 void SettingsGui::setDefault() {
-  _particleCount   = 1000000;
+  _particleCount   = 10000;
   _gravity         = 0.98f;
   _particleSize    = 1.0f;
   _particleOpacity = 0.5f;

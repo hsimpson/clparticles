@@ -11,6 +11,8 @@
 #include <iostream>
 #include <sstream>
 #include "boundingbox.h"
+#include "crosshair.h"
+#include "openclbackend.h"
 #include "settingsgui.h"
 #include "triangle.h"
 
@@ -26,22 +28,34 @@ void initializeGL(GLFWwindow* window);
 void toggleFullScreen(GLFWwindow* window);
 void updateViewMatrix();
 
-glm::mat4    g_projectionMatrix;
-glm::vec3    g_viewTranslation = glm::vec3(0.0f, 0.0f, -10.0f);
-glm::quat    g_viewRotation;
-glm::mat4    g_viewMatrix;
-glm::vec2    g_currentCursorPos;
-glm::ivec2   g_currentWindowSize = glm::ivec2(1280, 720);
-glm::ivec2   g_currentWindowPos;
-bool         g_lmb_pressed = false;
-bool         g_fullscreen  = false;
-const float  g_near        = 0.1f;
-const float  g_far         = 100.0f;
-GLFWwindow*  g_window      = nullptr;
-SettingsGui* g_settingsGui = nullptr;
+glm::vec4       g_ClearColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+glm::mat4       g_projectionMatrix;
+glm::vec3       g_viewTranslation = glm::vec3(0.0f, 0.0f, -10.0f);
+glm::quat       g_viewRotation;
+glm::mat4       g_viewMatrix;
+glm::vec2       g_currentCursorPos;
+glm::ivec2      g_currentWindowSize = glm::ivec2(1280, 720);
+glm::ivec2      g_currentWindowPos;
+bool            g_lmb_pressed = false;
+bool            g_fullscreen  = false;
+bool            g_forceActive = false;
+const float     g_near        = 0.01f;
+const float     g_far         = 100.0f;
+GLFWwindow*     g_window      = nullptr;
+SettingsGui*    g_settingsGui = nullptr;
+const glm::vec3 g_bboxDimension(8.0f, 5.0f, 5.0f);
+//Triangle        g_triangle;
+BoundingBox    g_box(g_bboxDimension);
+CrossHair      g_crosshair(glm::vec3(1.0f, 1.0f, 1.0f), g_bboxDimension);
+OpenCLBackend* g_clBackend = nullptr;
+glm::vec3      g_forcePos  = glm::vec3(0.0f, 0.0f, 0.0f);
 
-Triangle    g_triangle;
-BoundingBox g_box(glm::vec3(8.0f, 5.0f, 5.0f));
+bool g_leftKey     = false;
+bool g_rightKey    = false;
+bool g_forwardKey  = false;
+bool g_backwardKey = false;
+bool g_upKey       = false;
+bool g_downKey     = false;
 
 int main() {
   // glfw: initialize and configure
@@ -61,6 +75,7 @@ int main() {
 
   // glfw window creation
   // --------------------
+  glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
   g_window = glfwCreateWindow(g_currentWindowSize.x, g_currentWindowSize.y, "CLParticles", NULL, NULL);
   if (!g_window) {
     std::cout << "Failed to create GLFW window" << std::endl;
@@ -85,37 +100,70 @@ int main() {
 
   initializeGL(g_window);
 
-  Program* boxProgram = new Program();
-  boxProgram->attach(Shader::fromFile(Shader::Vertex, "./shaders/default.vert"));
-  boxProgram->attach(Shader::fromFile(Shader::Fragment, "./shaders/default.frag"));
+  Program defaultProgram;
+  defaultProgram.attach(Shader::fromFile(Shader::Vertex, "./shaders/default.vert"));
+  defaultProgram.attach(Shader::fromFile(Shader::Fragment, "./shaders/default.frag"));
+
+  Program particleProgram;
+  particleProgram.attach(Shader::fromFile(Shader::Vertex, "./shaders/particle.vert"));
+  particleProgram.attach(Shader::fromFile(Shader::Fragment, "./shaders/particle.frag"));
 
   g_settingsGui = new SettingsGui(g_window);
 
-  g_triangle.init(boxProgram);
-  g_box.init(boxProgram);
+  //g_triangle.init(&defaultProgram);
+  g_box.init(&defaultProgram);
+  g_crosshair.init(&defaultProgram);
+
+  g_clBackend = new OpenCLBackend(g_window, g_settingsGui, glm::vec4(g_bboxDimension, 0.0f));
+  g_clBackend->init(&particleProgram);
+  g_clBackend->runKernel(OpenCLBackend::Init, false, glm::vec4(g_forcePos, 0.0f));
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(g_window)) {
+    g_clBackend->runKernel(OpenCLBackend::Update, g_forceActive, glm::vec4(g_forcePos, 0.0f));
+
     glfwPollEvents();
 
     // render
     // ------
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // update matrices
-    boxProgram->setUniformValue("projectionMatrix", g_projectionMatrix);
-    boxProgram->setUniformValue("viewMatrix", g_viewMatrix);
+    defaultProgram.setUniformValue("projectionMatrix", g_projectionMatrix);
+    defaultProgram.setUniformValue("viewMatrix", g_viewMatrix);
 
-    g_triangle.render();
+    particleProgram.setUniformValue("projectionMatrix", g_projectionMatrix);
+    particleProgram.setUniformValue("viewMatrix", g_viewMatrix);
+
+    // g_triangle.render();
     g_box.render();
 
+    // crosshair movement
+    glm::vec3   movevector;
+    const float movespeed = 0.1f;
+    if (g_leftKey && !g_rightKey) movevector.x = -movespeed;
+    if (g_rightKey && !g_leftKey) movevector.x = movespeed;
+
+    if (g_downKey && !g_upKey) movevector.y = -movespeed;
+    if (g_upKey && !g_downKey) movevector.y = movespeed;
+
+    if (g_forwardKey && !g_backwardKey) movevector.z = -movespeed;
+    if (g_backwardKey && !g_forwardKey) movevector.z = movespeed;
+
+    g_forcePos = g_crosshair.translate(movevector);
+
+    g_crosshair.render(g_forceActive);
+
     /* render gui*/
+    g_clBackend->render();
+
     g_settingsGui->render();
 
     glfwSwapBuffers(g_window);
   }
+  delete g_clBackend;
   g_settingsGui->shutdown();
+  delete g_settingsGui;
   glfwTerminate();
   return 0;
 }
@@ -135,6 +183,11 @@ void initializeGL(GLFWwindow* window) {
   } else
     std::cout << "glDebugMessageCallback not available" << std::endl;
 #endif
+
+  glClearColor(g_ClearColor.r, g_ClearColor.g, g_ClearColor.b, g_ClearColor.a);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+  //glEnable(GL_LINE_SMOOTH);
 
   int display_w, display_h;
   glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -193,6 +246,43 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   if (key == GLFW_KEY_F11 && action == GLFW_PRESS) {
     toggleFullScreen(window);
   }
+
+  if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+    g_forceActive = true;
+  else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+    g_forceActive = false;
+
+  if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    g_rightKey = true;
+  else if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+    g_rightKey = false;
+
+  if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    g_leftKey = true;
+  else if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+    g_leftKey = false;
+
+  if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    g_forwardKey = true;
+  else if (key == GLFW_KEY_W && action == GLFW_RELEASE)
+    g_forwardKey = false;
+
+  if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    g_backwardKey = true;
+  else if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+    g_backwardKey = false;
+
+  if (key == GLFW_KEY_PAGE_UP && action == GLFW_PRESS)
+    g_upKey = true;
+  else if (key == GLFW_KEY_PAGE_UP && action == GLFW_RELEASE)
+    g_upKey = false;
+
+  if (key == GLFW_KEY_PAGE_DOWN && action == GLFW_PRESS)
+    g_downKey = true;
+  else if (key == GLFW_KEY_PAGE_DOWN && action == GLFW_RELEASE)
+    g_downKey = false;
+
+  //std::cout << "g_rightKey" << g_rightKey << std::endl;
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -221,7 +311,7 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
   if (g_lmb_pressed) {
     // std::cout << "pos: " << xpos << ", " << ypos << std::endl;
     glm::vec2 currentPos(xpos, ypos);
-    glm::vec2 offset = (currentPos - g_currentCursorPos) * 0.5f;
+    glm::vec2 offset = (currentPos - g_currentCursorPos) * 0.1f;
 
     g_viewRotation = glm::angleAxis(glm::radians(offset.x), glm::vec3(0.0f, 1.0f, 0.0f)) * g_viewRotation;
     g_viewRotation = glm::angleAxis(glm::radians(offset.y), glm::vec3(1.0f, 0.0f, 0.0f)) * g_viewRotation;

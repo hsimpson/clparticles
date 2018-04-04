@@ -25,13 +25,15 @@ python gl3w_gen.py
 ```
 
 ### Build Vcpkg
+
 ```sh
 cd vcpkg
 .\bootstrap-vcpkg.bat
 ```
 
 ### Install deps via Vcpkg
+
 ```sh
 vcpkg.exe install glfw3:x64-windows
 vcpkg.exe install glm:x64-windows
-``` 
+```

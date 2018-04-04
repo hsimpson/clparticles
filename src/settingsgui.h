@@ -27,4 +27,20 @@ class SettingsGui {
   void setup();
   void render();
   void shutdown();
+
+  int particleCount() const {
+    return _particleCount;
+  }
+  float gravity() const {
+    return _gravity;
+  }
+  float particleSize() const {
+    return _particleSize;
+  }
+  float particleOpacity() const {
+    return _particleOpacity;
+  }
+  float force() const {
+    return _force;
+  }
 };

@@ -37,7 +37,8 @@ void Program::link() {
   glGetProgramiv(_id, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(_id, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
+              << infoLog << std::endl;
     _linked = false;
   }
 }
@@ -59,4 +60,9 @@ GLint Program::getLocation(const std::string& name) {
 void Program::setUniformValue(const std::string& name, const glm::mat4& value) {
   use();
   glUniformMatrix4fv(getLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Program::setUniformValue(const std::string& name, const glm::vec4& value) {
+  use();
+  glUniform4fv(getLocation(name), 1, glm::value_ptr(value));
 }
