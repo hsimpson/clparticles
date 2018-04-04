@@ -30,3 +30,5 @@
 \.vs/
 
 x64/
+
+imgui\.ini

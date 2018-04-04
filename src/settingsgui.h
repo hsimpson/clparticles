@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <cmath>
 #include "imgui.h"
 
 class SettingsGui {
@@ -12,7 +13,7 @@ class SettingsGui {
   double _printFrameTimeDuration = 0.0;
   double _printDuration          = 0.0;
 
-  int   _particleCount;
+  int   _particlePerDimension;
   float _gravity;
   float _particleSize;
   float _particleOpacity;
@@ -29,7 +30,7 @@ class SettingsGui {
   void shutdown();
 
   int particleCount() const {
-    return _particleCount;
+    return (int)pow(_particlePerDimension, 3);
   }
   float gravity() const {
     return _gravity;

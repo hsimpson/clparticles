@@ -1,4 +1,8 @@
 #include "settingsgui.h"
+#include <iomanip>
+#include <iostream>
+#include <locale>
+#include <sstream>
 #include "imgui_impl_glfw_gl3.h"
 
 SettingsGui::SettingsGui(GLFWwindow* window)
@@ -23,11 +27,11 @@ SettingsGui::~SettingsGui() {
 }
 
 void SettingsGui::setDefault() {
-  _particleCount   = 10000;
-  _gravity         = 0.98f;
-  _particleSize    = 1.0f;
-  _particleOpacity = 0.5f;
-  _force           = 0.1f;
+  _particlePerDimension = 10;
+  _gravity              = 0.98f;
+  _particleSize         = 1.0f;
+  _particleOpacity      = 0.5f;
+  _force                = 0.1f;
 }
 
 void SettingsGui::setup() {
@@ -52,10 +56,8 @@ void SettingsGui::render() {
   ImGui::SetNextWindowPos(ImVec2(0, 0));
   ImGui::SetNextWindowSize(ImVec2(400.0, (float)height));
   ImGui::Begin("Settings", NULL, _windowFlags);
-  // ImGui::Text("Frame time: %.3f ms (%.1f FPS)", _printDuration, 1000.0 / _printDuration);
-  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
-              ImGui::GetIO().Framerate);
-  ImGui::SliderInt("Particle count", &_particleCount, 1000, 100000000, "%.0f");
+
+  ImGui::SliderInt("Particles^3", &_particlePerDimension, 10, 1000, "%.0f");
   ImGui::SliderFloat("Gravity", &_gravity, -1.0f, 1.0f, "%.2f");
   ImGui::SliderFloat("Particle size", &_particleSize, 1.0f, 10.0f, "%.2f");
   ImGui::SliderFloat("Particle opacity", &_particleOpacity, 0.0f, 1.0f, "%.2f");
@@ -78,6 +80,14 @@ void SettingsGui::render() {
   ImGui::Text("Space:");
   ImGui::SameLine(spacing);
   ImGui::Text("Activate force");
+
+  ImGui::Text("F11:");
+  ImGui::SameLine(spacing);
+  ImGui::Text("Toggle fullscreen");
+
+  ImGui::Text("ESC:");
+  ImGui::SameLine(spacing);
+  ImGui::Text("Quit");
 
   ImGui::Text("W:");
   ImGui::SameLine(spacing);
@@ -102,6 +112,18 @@ void SettingsGui::render() {
   ImGui::Text("Page Down:");
   ImGui::SameLine(spacing);
   ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Move force -Y");
+
+  ImGui::Separator();
+  ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Stats:");
+
+  // ImGui::Text("Frame time: %.3f ms (%.1f FPS)", _printDuration, 1000.0 / _printDuration);
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
+              ImGui::GetIO().Framerate);
+
+  std::stringstream particleCount;
+  particleCount.imbue(std::locale(""));
+  particleCount << "Particle count: " << std::fixed << std::setprecision(0) << pow(_particlePerDimension, 3);
+  ImGui::Text(particleCount.str().c_str());
 
   ImGui::End();
   /**/

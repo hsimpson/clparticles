@@ -187,7 +187,7 @@ void initializeGL(GLFWwindow* window) {
   glClearColor(g_ClearColor.r, g_ClearColor.g, g_ClearColor.b, g_ClearColor.a);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-  //glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_LINE_SMOOTH);
 
   int display_w, display_h;
   glfwGetFramebufferSize(window, &display_w, &display_h);

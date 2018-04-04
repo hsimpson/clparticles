@@ -20,9 +20,9 @@ class OpenCLBackend {
   glm::vec4        _boundingBox;
   glm::vec4        _particleColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-  std::vector<glm::vec4> _glPosArray;
-  std::vector<glm::vec4> _glVelArray;
-  Program*               _program = nullptr;
+  //std::vector<glm::vec4> _glPosArray;
+  //std::vector<glm::vec4> _glVelArray;
+  Program* _program = nullptr;
 
   GLuint _vao;
   GLuint _vboPos;
@@ -44,9 +44,9 @@ class OpenCLBackend {
     ForcePos
   };
 
-  void resizeBuffers();
-  void initGLBuffers();
-  void updateGLBuffers(float deltaTime, bool forceActive, const glm::vec4& forcePosition);
+  bool resizeBuffers();
+  //void initGLBuffers();
+  //void updateGLBuffers(float deltaTime, bool forceActive, const glm::vec4& forcePosition);
 
  public:
   enum RunMode { Init,

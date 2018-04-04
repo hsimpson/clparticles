@@ -24,7 +24,7 @@ OpenCLBackend::~OpenCLBackend() {
 
 void OpenCLBackend::init(Program* glprogram) {
   _program = glprogram;
-  /*
+
   std::vector<cl::Platform> platforms;
   cl::Platform::get(&platforms);
 
@@ -71,7 +71,6 @@ void OpenCLBackend::init(Program* glprogram) {
 
   // create the kernel
   _kernel = cl::Kernel(clprogram, "particle_kernel");
-  */
 
   glGenVertexArrays(1, &_vao);
 
@@ -79,7 +78,7 @@ void OpenCLBackend::init(Program* glprogram) {
   glGenBuffers(1, &_vboPos);
   glGenBuffers(1, &_vboVel);
 
-  //resizeBuffers();
+  resizeBuffers();
 
   glBindVertexArray(_vao);
   glBindBuffer(GL_ARRAY_BUFFER, _vboPos);
@@ -87,16 +86,14 @@ void OpenCLBackend::init(Program* glprogram) {
   /*
   _clglPos = cl::BufferGL(_context, CL_MEM_READ_WRITE, _vboPos);
   _kernel.setArg(OpenCLBackend::Positions, _clglPos);
-  */
 
   //glBindBuffer(GL_ARRAY_BUFFER, _vboVel);
 
-  /*
   _clglVel = cl::BufferGL(_context, CL_MEM_READ_WRITE, _vboVel);
   _kernel.setArg(OpenCLBackend::Velocities, _clglVel);
+  */
 
   _kernel.setArg(OpenCLBackend::BoundingBox, sizeof(cl_float4), glm::value_ptr(_boundingBox));
-  */
 
   // set the vertex attribute pointers
   // vertex Positions
@@ -106,6 +103,8 @@ void OpenCLBackend::init(Program* glprogram) {
   glBindVertexArray(0);
 }
 
+/* only for cpu slow impl */
+/*
 void OpenCLBackend::initGLBuffers() {
   // calc the cubic root of particle count
   float n = std::cbrt((float)_particleCount);
@@ -126,12 +125,6 @@ void OpenCLBackend::initGLBuffers() {
     float vy = sin((float)(1234 * i));
     float vz = cos((float)(1234 * i));
 
-    /*
-    float vx = 0.0f;
-    float vy = 0.0f;
-    float vz = 0.0f;
-    */
-
     _glPosArray[i] = glm::vec4(x, y, z, 1.0f);
     _glVelArray[i] = glm::vec4(vx, vy, vz, 1.0f);
   }
@@ -142,7 +135,10 @@ void OpenCLBackend::initGLBuffers() {
   glBindBuffer(GL_ARRAY_BUFFER, _vboVel);
   glBufferSubData(GL_ARRAY_BUFFER, 0, _particleCount * 4 * sizeof(float), &_glVelArray[0]);
 }
+*/
 
+/* only for cpu slow impl*/
+/*
 void OpenCLBackend::updateGLBuffers(float deltaTime, bool forceActive, const glm::vec4& forcePosition) {
   float g        = _gui->gravity() * deltaTime;
   float bbx_half = _boundingBox.x / 2;
@@ -208,16 +204,18 @@ void OpenCLBackend::updateGLBuffers(float deltaTime, bool forceActive, const glm
   glBindBuffer(GL_ARRAY_BUFFER, _vboVel);
   glBufferSubData(GL_ARRAY_BUFFER, 0, _particleCount * 4 * sizeof(float), &_glVelArray[0]);
 }
+*/
 
 void OpenCLBackend::runKernel(OpenCLBackend::RunMode runmode, bool forceActive, const glm::vec4& forcePosition) {
   double currentTime = glfwGetTime();
   float  duration    = float(currentTime - _lastTime);
   _lastTime          = currentTime;
-  resizeBuffers();
+  if (resizeBuffers()) {
+    runmode = OpenCLBackend::Init;
+  }
 
   _particleColor.a = _gui->particleOpacity();
 
-  /*
   // ensure OpenGL is finished
   glFinish();
   _kernel.setArg(OpenCLBackend::Fuction, (int)runmode);
@@ -232,14 +230,13 @@ void OpenCLBackend::runKernel(OpenCLBackend::RunMode runmode, bool forceActive, 
   _queue.enqueueAcquireGLObjects(&shared_objects);
   _queue.finish();
 
-  _queue.enqueueNDRangeKernel(_kernel, cl::NullRange, cl::NDRange(1024), cl::NDRange(128));
+  _queue.enqueueNDRangeKernel(_kernel, cl::NDRange(0), cl::NDRange(_particleCount));
   _queue.finish();
 
   _queue.enqueueReleaseGLObjects(&shared_objects);
   _queue.finish();
-  */
 
-  updateGLBuffers(duration, forceActive, forcePosition);
+  //updateGLBuffers(duration, forceActive, forcePosition);
 }
 
 void OpenCLBackend::render() {
@@ -250,20 +247,30 @@ void OpenCLBackend::render() {
   glBindVertexArray(0);
 }
 
-void OpenCLBackend::resizeBuffers() {
+bool OpenCLBackend::resizeBuffers() {
   int newParticleCount = _gui->particleCount();
   if (newParticleCount != _particleCount) {
     _particleCount = newParticleCount;
 
-    _glPosArray.resize(_particleCount);
-    _glVelArray.resize(_particleCount);
+    //_glPosArray.resize(_particleCount);
+    //_glVelArray.resize(_particleCount);
 
     glBindBuffer(GL_ARRAY_BUFFER, _vboPos);
     glBufferData(GL_ARRAY_BUFFER, _particleCount * 4 * sizeof(float), NULL, GL_DYNAMIC_DRAW);
 
+    _clglPos = cl::BufferGL(_context, CL_MEM_READ_WRITE, _vboPos);
+    _kernel.setArg(OpenCLBackend::Positions, _clglPos);
+
     glBindBuffer(GL_ARRAY_BUFFER, _vboVel);
     glBufferData(GL_ARRAY_BUFFER, _particleCount * 4 * sizeof(float), NULL, GL_DYNAMIC_DRAW);
 
-    initGLBuffers();
+    _clglVel = cl::BufferGL(_context, CL_MEM_READ_WRITE, _vboVel);
+    _kernel.setArg(OpenCLBackend::Velocities, _clglVel);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, _vboVel);
+
+    //initGLBuffers();
+    return true;
   }
+  return false;
 }
