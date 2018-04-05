@@ -30,8 +30,8 @@ void SettingsGui::setDefault() {
   _particlePerDimension = 10;
   _gravity              = 0.98f;
   _particleSize         = 1.0f;
-  _particleOpacity      = 0.5f;
   _force                = 0.1f;
+  _particleColor        = glm::vec4(1.0f, 0.0f, 0.0f, 0.5f);
 }
 
 void SettingsGui::setup() {
@@ -48,6 +48,7 @@ void SettingsGui::render() {
     _printDuration = duration;
   }
   */
+
   ImGui_ImplGlfwGL3_NewFrame();
 
   /**/
@@ -60,8 +61,9 @@ void SettingsGui::render() {
   ImGui::SliderInt("Particles^3", &_particlePerDimension, 10, 1000, "%.0f");
   ImGui::SliderFloat("Gravity", &_gravity, -1.0f, 1.0f, "%.2f");
   ImGui::SliderFloat("Particle size", &_particleSize, 1.0f, 10.0f, "%.2f");
-  ImGui::SliderFloat("Particle opacity", &_particleOpacity, 0.0f, 1.0f, "%.2f");
   ImGui::SliderFloat("Force", &_force, -5.0f, 5.0f, "%.2f");
+  ImGui::ColorPicker4("Particle color", (float*)&_particleColor, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_RGB);
+
   if (ImGui::Button("Set default values")) {
     setDefault();
   }
@@ -116,7 +118,7 @@ void SettingsGui::render() {
   ImGui::Separator();
   ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Stats:");
 
-  // ImGui::Text("Frame time: %.3f ms (%.1f FPS)", _printDuration, 1000.0 / _printDuration);
+  //ImGui::Text("Frame time: %.3f ms (%.1f FPS)", _printDuration, 1000.0 / _printDuration);
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
               ImGui::GetIO().Framerate);
 

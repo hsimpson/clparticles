@@ -214,7 +214,7 @@ void OpenCLBackend::runKernel(OpenCLBackend::RunMode runmode, bool forceActive, 
     runmode = OpenCLBackend::Init;
   }
 
-  _particleColor.a = _gui->particleOpacity();
+  _particleColor = _gui->particleColor();
 
   // ensure OpenGL is finished
   glFinish();

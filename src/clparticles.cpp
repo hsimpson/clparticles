@@ -95,7 +95,7 @@ int main() {
   glfwMakeContextCurrent(g_window);
   glfwSetFramebufferSizeCallback(g_window, framebuffer_size_callback);
 
-  // glfwSwapInterval(1); // Enable vsync
+  glfwSwapInterval(1);  // Enable vsync
   gl3wInit();
 
   initializeGL(g_window);

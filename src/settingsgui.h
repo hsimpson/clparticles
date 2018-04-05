@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 #include <cmath>
+#include <glm/vec4.hpp>
 #include "imgui.h"
 
 class SettingsGui {
@@ -13,11 +14,11 @@ class SettingsGui {
   double _printFrameTimeDuration = 0.0;
   double _printDuration          = 0.0;
 
-  int   _particlePerDimension;
-  float _gravity;
-  float _particleSize;
-  float _particleOpacity;
-  float _force;
+  int       _particlePerDimension;
+  float     _gravity;
+  float     _particleSize;
+  float     _force;
+  glm::vec4 _particleColor;
 
   void setDefault();
 
@@ -38,8 +39,8 @@ class SettingsGui {
   float particleSize() const {
     return _particleSize;
   }
-  float particleOpacity() const {
-    return _particleOpacity;
+  glm::vec4 particleColor() const {
+    return _particleColor;
   }
   float force() const {
     return _force;
