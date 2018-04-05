@@ -4,9 +4,11 @@ Calculating particles with OpenCL and rendering with OpenGL
 
 ## Dependencies
 
-- gl3w
-- glfw
-- glm
+- gl3w <https://github.com/skaslev/gl3w>
+- glfw <http://www.glfw.org/>
+- glm <https://glm.g-truc.net>
+- imgui <https://github.com/ocornut/imgui>
+- vcpkg <https://github.com/Microsoft/vcpkg>
 
 ## Building
 
@@ -15,7 +17,6 @@ Calculating particles with OpenCL and rendering with OpenGL
 - Visual Studio 2017
 - Python
 - CMake
-- Vcpkg
 
 ### Build gl3w
 
