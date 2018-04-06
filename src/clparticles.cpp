@@ -342,8 +342,8 @@ void toggleFullScreen(GLFWwindow* window) {
     const GLFWvidmode* mode    = glfwGetVideoMode(monitor);
 
     // switch to full screen
-
     glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
+    glfwSwapInterval(1);
   } else {
     glfwSetWindowMonitor(window, nullptr, g_currentWindowPos.x, g_currentWindowPos.y, g_currentWindowSize.x,
                          g_currentWindowSize.y, GLFW_DONT_CARE);
