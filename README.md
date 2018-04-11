@@ -2,7 +2,11 @@
 
 Calculating particles with OpenCL 1.2 and rendering with OpenGL 4.6
 
+Screenshot:
 ![Screenshot](media/screenshots/clparticles_2018-04-06_01-24-12.png)
+
+Video:
+<https://www.youtube.com/watch?v=VTs5xOGDT5w>
 
 ## Dependencies
 
