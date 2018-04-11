@@ -1,6 +1,8 @@
 # CLParticles
 
-Calculating particles with OpenCL and rendering with OpenGL
+Calculating particles with OpenCL 1.2 and rendering with OpenGL 4.6
+
+![Screenshot](media/screenshots/clparticles_2018-04-06_01-24-12.png)
 
 ## Dependencies
 
