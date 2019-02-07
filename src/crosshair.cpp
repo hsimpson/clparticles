@@ -12,12 +12,12 @@ CrossHair::CrossHair(const glm::vec3& dimensions, const glm::vec3& bounding)
       ObjectBase::Vertex(glm::vec3(_dimensions.x / 2, 0.0f, 0.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
 
       // y axis
-      ObjectBase::Vertex(glm::vec3(0.0f, -_dimensions.x / 2, 0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
-      ObjectBase::Vertex(glm::vec3(0.0f, _dimensions.x / 2, 0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
+      ObjectBase::Vertex(glm::vec3(0.0f, -_dimensions.y / 2, 0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
+      ObjectBase::Vertex(glm::vec3(0.0f, _dimensions.y / 2, 0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
 
       // x axis
-      ObjectBase::Vertex(glm::vec3(0.0f, 0.0f, -_dimensions.x / 2), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)),
-      ObjectBase::Vertex(glm::vec3(0.0f, 0.0f, _dimensions.x / 2), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)),
+      ObjectBase::Vertex(glm::vec3(0.0f, 0.0f, -_dimensions.z / 2), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)),
+      ObjectBase::Vertex(glm::vec3(0.0f, 0.0f, _dimensions.z / 2), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)),
   };
 
   _indices = {0, 1, 2, 3, 4, 5};

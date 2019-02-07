@@ -17,7 +17,7 @@ class OpenCLBackend {
   cl::BufferGL     _clglPos;
   cl::BufferGL     _clglVel;
   cl::CommandQueue _queue;
-  glm::vec4        _boundingBox;
+  glm::vec4        _boundingBox   = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
   glm::vec4        _particleColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
   //std::vector<glm::vec4> _glPosArray;

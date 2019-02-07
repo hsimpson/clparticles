@@ -14,10 +14,10 @@ class ObjectBase {
   GLenum      _drawMode;
   bool        _initialized = false;
   Program*    _program     = nullptr;
-  glm::mat4x4 _modelMatrix;
-  glm::quat   _rotation;
-  glm::vec3   _position;
-  glm::vec3   _scale = glm::vec3(1.0, 1.0, 1.0);
+  glm::mat4   _modelMatrix = glm::mat4(1.0f);
+  glm::quat   _rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+  glm::vec3   _position    = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3   _scale       = glm::vec3(1.0f, 1.0f, 1.0f);
 
   struct Vertex {
     // position

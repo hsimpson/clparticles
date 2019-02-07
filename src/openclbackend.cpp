@@ -38,7 +38,8 @@ void OpenCLBackend::init(Program* glprogram) {
       (cl_context_properties)GetDC(glfwGetWin32Window(_window)),
       CL_CONTEXT_PLATFORM,
       (cl_context_properties)platform(),
-      0};
+      0
+  };
 #endif
 
   std::vector<cl::Device> devices;

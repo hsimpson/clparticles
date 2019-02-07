@@ -67,7 +67,7 @@
     <ProjectGuid>{166F829C-671C-4A0D-8B71-6D285CBA815B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>clparticles</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -119,16 +119,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>gl3w\include;vcpkg\installed\x64-windows\include;imgui;imgui\examples\opengl3_example;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>vcpkg\installed\x64-windows\debug\lib;$(CUDA_PATH)\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>gl3w\include;glfw\include;imgui;imgui\examples\opengl3_example;glm;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>glfw\build\src\Debug;$(CUDA_PATH)\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>gl3w\include;vcpkg\installed\x64-windows\include;imgui;imgui\examples\opengl3_example;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>vcpkg\installed\x64-windows\lib;$(CUDA_PATH)\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>gl3w\include;glfw\include;imgui;imgui\examples\opengl3_example;glm;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>glfw\build\src\Release;$(CUDA_PATH)\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -152,7 +152,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>GLFW_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_DLL;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_PRECISION_HIGHP_FLOAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -191,7 +191,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>GLFW_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_DLL;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_PRECISION_HIGHP_FLOAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -18,7 +18,7 @@ class SettingsGui {
   float     _gravity;
   float     _particleSize;
   float     _force;
-  glm::vec4 _particleColor;
+  glm::vec4 _particleColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
   void setDefault();
 

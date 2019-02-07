@@ -39,9 +39,9 @@ void ObjectBase::init(Program* program) {
 }
 
 void ObjectBase::updated_model_matrix() {
-  glm::mat4 translationMatrix = glm::translate(glm::mat4x4(), _position);
+  glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), _position);
   glm::mat4 rotationMatrix    = glm::toMat4(_rotation);
-  glm::mat4 scaleMatrix       = glm::scale(glm::mat4x4(), _scale);
+  glm::mat4 scaleMatrix       = glm::scale(glm::mat4(1.0f), _scale);
   _modelMatrix                = translationMatrix * rotationMatrix * scaleMatrix;
 }
 

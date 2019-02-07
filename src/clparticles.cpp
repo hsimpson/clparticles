@@ -29,11 +29,11 @@ void toggleFullScreen(GLFWwindow* window);
 void updateViewMatrix();
 
 glm::vec4       g_ClearColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-glm::mat4       g_projectionMatrix;
+glm::mat4       g_projectionMatrix = glm::mat4(1.0f);
 glm::vec3       g_viewTranslation = glm::vec3(0.0f, 0.0f, -10.0f);
-glm::quat       g_viewRotation;
-glm::mat4       g_viewMatrix;
-glm::vec2       g_currentCursorPos;
+glm::quat       g_viewRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+glm::mat4       g_viewMatrix = glm::mat4(1.0f);
+glm::vec2       g_currentCursorPos  = glm::vec2(0.0f, 0.0f);
 glm::ivec2      g_currentWindowSize = glm::ivec2(1280, 720);
 glm::ivec2      g_currentWindowPos;
 bool            g_lmb_pressed = false;
@@ -139,7 +139,7 @@ int main() {
     g_box.render();
 
     // crosshair movement
-    glm::vec3   movevector;
+    glm::vec3   movevector = glm::vec3(0.0f, 0.0f, 0.0f);
     const float movespeed = 0.1f;
     if (g_leftKey && !g_rightKey) movevector.x = -movespeed;
     if (g_rightKey && !g_leftKey) movevector.x = movespeed;
@@ -154,9 +154,9 @@ int main() {
 
     g_crosshair.render(g_forceActive);
 
-    /* render gui*/
     g_clBackend->render();
 
+    /* render gui*/
     g_settingsGui->render();
 
     glfwSwapBuffers(g_window);
@@ -295,14 +295,14 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
   if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
     g_lmb_pressed = true;
-    std::cout << "LMB pressed" << std::endl;
+    //std::cout << "LMB pressed" << std::endl;
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
     g_currentCursorPos.x = (float)xpos;
     g_currentCursorPos.y = (float)ypos;
   } else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
     g_lmb_pressed = false;
-    std::cout << "LMB released" << std::endl;
+    //std::cout << "LMB released" << std::endl;
   }
 }
 
@@ -351,7 +351,7 @@ void toggleFullScreen(GLFWwindow* window) {
 }
 
 void updateViewMatrix() {
-  glm::mat4 translationMatrix = glm::translate(glm::mat4x4(), g_viewTranslation);
+  glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), g_viewTranslation);
   glm::mat4 rotationMatrix    = glm::toMat4(g_viewRotation);
   g_viewMatrix                = translationMatrix * rotationMatrix;
 }

@@ -14,7 +14,10 @@ Video:
 - glfw <http://www.glfw.org/>
 - glm <https://glm.g-truc.net>
 - imgui <https://github.com/ocornut/imgui>
-- vcpkg <https://github.com/Microsoft/vcpkg>
+- OpenCL SDK for your hardware:
+  - For AMD GPUs and CPUs download the [OCL_SDK_Light](https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases)
+  - For NVIDIA GPUs download the [CUDA Toolkit](http://developer.nvidia.com/object/cuda_download.html)
+  - For Intel CPUs/GPUs download the [Intel OpenCL SDK](https://software.intel.com/en-us/intel-opencl)
 
 ## Building
 
@@ -31,16 +34,13 @@ cd gl3w
 python gl3w_gen.py
 ```
 
-### Build Vcpkg
+### Build glfw
 
 ```sh
-cd vcpkg
-.\bootstrap-vcpkg.bat
+cd glfw
+mkdir build
+cd build
+cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_EXAMPLES=OFF ..
 ```
 
-### Install deps via Vcpkg
-
-```sh
-vcpkg.exe install glfw3:x64-windows
-vcpkg.exe install glm:x64-windows
-```
+Open 'GLFW.sln' in the bild directory and build Debug and Release configuration
