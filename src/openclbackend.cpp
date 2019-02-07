@@ -3,6 +3,7 @@
 #define GLFW_EXPOSE_NATIVE_WGL
 #endif
 
+#include "openclinfo.h"
 #include "openclbackend.h"
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
@@ -12,8 +13,8 @@
 #include <iostream>
 #include <sstream>
 
-OpenCLBackend::OpenCLBackend(GLFWwindow* window, SettingsGui* gui, const glm::vec4& boundingBox)
-    : _window(window), _gui(gui), _boundingBox(boundingBox) {
+OpenCLBackend::OpenCLBackend(GLFWwindow* window, SettingsGui* gui, const glm::vec4& boundingBox, int platformSelect, int deviceSelect)
+    : _window(window), _gui(gui), _boundingBox(boundingBox), _platformSelect(platformSelect), _deviceSelect(deviceSelect) {
 }
 
 OpenCLBackend::~OpenCLBackend() {
@@ -23,12 +24,21 @@ OpenCLBackend::~OpenCLBackend() {
 }
 
 void OpenCLBackend::init(Program* glprogram) {
+
+  OpenCLInfo::showInfo();
+
+
+
   _program = glprogram;
 
   std::vector<cl::Platform> platforms;
   cl::Platform::get(&platforms);
 
-  auto platform = platforms.front();
+  if (_platformSelect > platforms.size() - 1) {
+    _platformSelect = 0; // fallback to first platfrom
+  }
+
+  cl::Platform platform = platforms[_platformSelect];
 
 #ifdef _WIN32
   cl_context_properties contextProps[] = {
@@ -45,18 +55,14 @@ void OpenCLBackend::init(Program* glprogram) {
   std::vector<cl::Device> devices;
   platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
 
-  _device  = devices.front();
+  if (_deviceSelect > devices.size() - 1) {
+    _deviceSelect = 0;  // fallback to first device
+  }
+
+
+  _device  = devices[_deviceSelect];
   _context = cl::Context(_device, contextProps);
   _queue   = cl::CommandQueue(_context, _device, CL_QUEUE_PROFILING_ENABLE);  // with profiling enabled
-
-  std::cout << "OpenCL Info:" << std::endl;
-  std::cout << "Name: " << _device.getInfo<CL_DEVICE_NAME>() << std::endl;
-  std::cout << "Vendor: " << _device.getInfo<CL_DEVICE_VENDOR>() << std::endl;
-  std::cout << "Driver Version: " << _device.getInfo<CL_DRIVER_VERSION>() << std::endl;
-  std::cout << "Device Profile: " << _device.getInfo<CL_DEVICE_PROFILE>() << std::endl;
-  std::cout << "Device version: " << _device.getInfo<CL_DEVICE_VERSION>() << std::endl;
-  std::cout << "Max Work Group Size: " << _device.getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>() << std::endl;
-  std::cout << "Device extensions: " << _device.getInfo<CL_DEVICE_EXTENSIONS>() << std::endl;
 
   const std::string filename = "./cl_kernels/particle_kernel.cl";
   std::ifstream     infile(filename.c_str());

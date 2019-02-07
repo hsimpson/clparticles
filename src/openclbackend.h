@@ -11,6 +11,8 @@ class OpenCLBackend {
  private:
   GLFWwindow*      _window;
   SettingsGui*     _gui;
+  int              _platformSelect;
+  int              _deviceSelect;
   cl::Device       _device;
   cl::Context      _context;
   cl::Kernel       _kernel;
@@ -52,7 +54,7 @@ class OpenCLBackend {
   enum RunMode { Init,
                  Update,
                  Resize };
-  OpenCLBackend(GLFWwindow* window, SettingsGui* gui, const glm::vec4& boundingBox);
+  OpenCLBackend(GLFWwindow* window, SettingsGui* gui, const glm::vec4& boundingBox, int platformSelect, int deviceSelect);
   virtual ~OpenCLBackend();
 
   void init(Program* program);

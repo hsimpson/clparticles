@@ -28,6 +28,7 @@
     <ClCompile Include="src\clparticles.cpp" />
     <ClCompile Include="src\crosshair.cpp" />
     <ClCompile Include="src\openclbackend.cpp" />
+    <ClCompile Include="src\openclinfo.cpp" />
     <ClCompile Include="src\settingsgui.cpp" />
     <ClCompile Include="src\objectbase.cpp" />
     <ClCompile Include="src\program.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="src\boundingbox.h" />
     <ClInclude Include="src\crosshair.h" />
     <ClInclude Include="src\openclbackend.h" />
+    <ClInclude Include="src\openclinfo.h" />
     <ClInclude Include="src\settingsgui.h" />
     <ClInclude Include="src\objectbase.h" />
     <ClInclude Include="src\program.h" />

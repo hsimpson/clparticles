@@ -57,7 +57,18 @@ bool g_backwardKey = false;
 bool g_upKey       = false;
 bool g_downKey     = false;
 
-int main() {
+int main(int argc, char* argv[]) {
+
+  int platform = 0;
+  int device   = 0;
+  if (argc > 1) {
+    std::string arg1 = argv[1];
+    platform         = std::stoi(arg1);
+  }
+  if (argc > 2) {
+    std::string arg2 = argv[2];
+    device           = std::stoi(arg2);
+  }
   // glfw: initialize and configure
   // ------------------------------
   glfwSetErrorCallback(error_callback);
@@ -114,7 +125,7 @@ int main() {
   g_box.init(&defaultProgram);
   g_crosshair.init(&defaultProgram);
 
-  g_clBackend = new OpenCLBackend(g_window, g_settingsGui, glm::vec4(g_bboxDimension, 0.0f));
+  g_clBackend = new OpenCLBackend(g_window, g_settingsGui, glm::vec4(g_bboxDimension, 0.0f), platform, device);
   g_clBackend->init(&particleProgram);
   g_clBackend->runKernel(OpenCLBackend::Init, false, glm::vec4(g_forcePos, 0.0f));
 
